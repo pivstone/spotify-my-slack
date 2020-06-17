@@ -154,7 +154,7 @@ async def _set_user_status(
             user.id,
             err,
         )
-        UPDATE_THRESHOLD = datetime.now(timezone.utc) + timedelta(seconds=1)
+        UPDATE_THRESHOLD = datetime.now(timezone.utc) + timedelta(seconds=6)
         return False
     if not user_profile_data.ok:
         LOGGER.warning(
