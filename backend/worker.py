@@ -140,6 +140,7 @@ async def _update_spotify_tokens(user: User) -> bool:
 async def _set_user_status(
     user: User, user_profile_args: UserProfileArgs, status_set_last_time: bool
 ) -> bool:
+    global UPDATE_THRESHOLD
     """
     Set the user status & update their database entry. Returns success status
     """
@@ -153,6 +154,7 @@ async def _set_user_status(
             user.id,
             err,
         )
+        UPDATE_THRESHOLD = datetime.now(timezone.utc) + timedelta(seconds=1)
         return False
     if not user_profile_data.ok:
         LOGGER.warning(
