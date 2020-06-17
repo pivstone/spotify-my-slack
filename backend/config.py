@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     port: int
     sss_secret_key: str
     update_loop_default_interval: int
-    worker_coroutines: int = 25
+    worker_coroutines: int = 1
 
     database_url: str
 
