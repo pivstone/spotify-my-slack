@@ -101,11 +101,12 @@ async def _update_user(user: User, attempt: int = 1) -> None:
         if current_profile.profile.status_text == user_profile_args.status_text:
             return
         LOGGER.info("Setting user status %s", user_profile_args)
+        await syncio.sleep(1)
         await _set_user_status(user, user_profile_args, True)
     elif user.statusSetLastTime:
         user_profile_args = UserProfileArgs(status_text="", status_emoji="")
         await _set_user_status(user, user_profile_args, False)
-    await asyncio.sleep(5)
+    await asyncio.sleep(3)
 
 async def _update_spotify_tokens(user: User) -> bool:
     """
