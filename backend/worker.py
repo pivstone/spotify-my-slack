@@ -96,7 +96,9 @@ async def _update_user(user: User, attempt: int = 1) -> None:
             status_emoji=get_custom_emoji(user, player.item),
         )
         LOGGER.info("Setting user status %s", user_profile_args)
-        LOGGER.info("Get user status %s", await get_status(user.slackAccessToken))
+        current_profile = await get_status(user.slackAccessToken)
+        if current_profile.profile.status_text == user_profile_args.status_text:
+            return
         await _set_user_status(user, user_profile_args, True)
     elif user.statusSetLastTime:
         user_profile_args = UserProfileArgs(status_text="", status_emoji="")
