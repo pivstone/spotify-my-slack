@@ -18,6 +18,7 @@ class SlackApiError(BaseApiError):
 
 MAKE_REQUEST = gen_make_request("Slack", SlackApiError)
 USERS_PROFILE_SET_URI = "https://slack.com/api/users.profile.set"
+USERS_PROFILE_GET_URI = "https://slack.com/api/users.profile.get"
 TOKEN_EXCHANGE_URI = "https://slack.com/api/oauth.access"
 
 
@@ -66,6 +67,18 @@ class UserProfileData(BaseModel):
 
     ok: bool
     error: Optional[str]
+
+async def get_status(access_token: str) -> UserProfileData:
+    """
+    Get the user's status
+    """
+    return await MAKE_REQUEST(
+        "GET",
+        UserProfileData,
+        USERS_PROFILE_GET_URI,
+        access_token=access_token
+    )
+
 
 
 async def set_status(

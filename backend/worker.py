@@ -19,6 +19,7 @@ from backend.utils.slack import (
     UserProfileArgs,
     UserProfileData,
     set_status,
+    get_status,
 )
 from backend.utils.spotify import (
     GrantType,
@@ -95,6 +96,7 @@ async def _update_user(user: User, attempt: int = 1) -> None:
             status_emoji=get_custom_emoji(user, player.item),
         )
         LOGGER.info("Setting user status %s", user_profile_args)
+        LOGGER.info("Get user status %s", await get_status(user.slackAccessToken))
         await _set_user_status(user, user_profile_args, True)
     elif user.statusSetLastTime:
         user_profile_args = UserProfileArgs(status_text="", status_emoji="")
