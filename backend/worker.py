@@ -95,13 +95,6 @@ async def _update_user(user: User, attempt: int = 1) -> None:
             status_text=_calc_status_text(player.item),
             status_emoji=get_custom_emoji(user, player.item),
         )
-        current_profile = await _get_status(user.slackAccessToken)
-        if current_profile is False:
-            return
-        if current_profile.profile.status_text == user_profile_args.status_text:
-            return
-        LOGGER.info("Setting user status %s", user_profile_args)
-        await syncio.sleep(1)
         await _set_user_status(user, user_profile_args, True)
     elif user.statusSetLastTime:
         user_profile_args = UserProfileArgs(status_text="", status_emoji="")
@@ -143,22 +136,6 @@ async def _update_spotify_tokens(user: User) -> bool:
     )
     return True
 
-async def _get_status(access_token: str) -> UserProfileData:
-    """
-    Get the user's status
-    """
-    global UPDATE_THRESHOLD
-    try:
-        return await get_status(access_token)
-    except SlackApiError as err:
-        LOGGER.warning(
-            "Exiting update loop. Could not set status: %s",
-            err,
-        )
-        UPDATE_THRESHOLD = datetime.now(timezone.utc) + timedelta(seconds=6)
-        return False
-
-
 async def _set_user_status(
     user: User, user_profile_args: UserProfileArgs, status_set_last_time: bool
 ) -> bool:
@@ -167,6 +144,11 @@ async def _set_user_status(
     Set the user status & update their database entry. Returns success status
     """
     try:
+        current_profile = await get_status(user.slackAccessToken)
+        if current_profile.profile.status_text == user_profile_args.status_text:
+            return True
+        LOGGER.info("Setting user status %s", user_profile_args)
+        await asyncio.sleep(1)
         user_profile_data: UserProfileData = await set_status(
             user_profile_args, user.slackAccessToken
         )
