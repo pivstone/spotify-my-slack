@@ -43,7 +43,7 @@ async def _update_user(user: User, attempt: int = 1) -> None:
     global UPDATE_THRESHOLD  # pylint:disable=global-statement
     update_threshold_delta = UPDATE_THRESHOLD - datetime.now(timezone.utc)
     if update_threshold_delta.total_seconds() > 0:
-        await asyncio.sleep(update_threshold_delta.total_seconds() + random())
+        await asyncio.sleep(update_threshold_delta.total_seconds() + 5)
 
     # Handle Spotify token refreshes
     spotify_token_expired = user.spotifyExpiresAt <= datetime.now(
