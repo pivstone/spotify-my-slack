@@ -74,8 +74,8 @@ async def get_status(access_token: str) -> UserProfileData:
     """
     return await MAKE_REQUEST(
         "GET",
-        UserProfileData,
         USERS_PROFILE_GET_URI,
+        UserProfileData,
         access_token=access_token
     )
 
