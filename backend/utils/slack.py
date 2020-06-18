@@ -66,6 +66,7 @@ class UserProfileData(BaseModel):
     """
 
     ok: bool
+    profile: UserProfileArgs
     error: Optional[str]
 
 async def get_status(access_token: str) -> UserProfileData:
