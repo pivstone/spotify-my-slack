@@ -78,6 +78,8 @@ async def _update_user(user: User, attempt: int = 1) -> None:
                 user.id,
                 err,
             )
+        elif err.message == 'The access token expired':
+            await _update_spotify_tokens(user)
         else:
             retry_after_final = err.retry_after + 2
             UPDATE_THRESHOLD = datetime.now(timezone.utc) + timedelta(
